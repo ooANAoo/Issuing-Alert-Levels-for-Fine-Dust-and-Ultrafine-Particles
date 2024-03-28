@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Video Card Performance Chart</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+        }
+
+        #chart {
+            width: 80%;
+            max-width: 1000px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin: 20px auto;
+            /* 중앙 정렬 */
+        }
+
+        .chart-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        .chart-container:nth-child(odd) {
+            background-color: #fff;
+        }
+
+        .chart-container:nth-child(even) {
+            background-color: #eee;
+        }
+
+        .chart-container .name {
+            flex: 1;
+            padding: 0 10px;
+        }
+
+        .chart-container .bar {
+            flex: 2;
+            height: 20px;
+            position: relative;
+            /* 기본 바 배경 */
+            border-radius: 5px;
+        }
+
+        .chart-container .bar span {
+            display: block;
+            height: 100%;
+            border-radius: 5px;
+            line-height: 20px;
+            /* 세로 중앙 정렬을 위함 */
+            color: white;
+            /* 바 안의 텍스트 색상 */
+            text-align: center;
+            /* 텍스트 중앙 정렬 */
+        }
+
+        .chart-container .price {
+            flex: 0.5;
+            text-align: right;
+            padding-right: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .chart-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .chart-container .name,
+            .chart-container .bar,
+            .chart-container .price {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="chart">
+        <div th:each="data : ${ranking}">
+            <div class="chart-container">
+                <div class="name" th:text="${data.vgaName}"></div>
+                <div class="bar">
+                        <span th:style="'width:' + (${data.score} / ${maxScore}) * 100 + '%; background-color: #4CAF50'"
+                              th:text="${data.score}"></span>
+                </div>
+                <div class="price" th:text="${data.vgaPrice != null ? '$' + #numbers.formatDecimal(data.vgaPrice, 1, 'COMMA', 2, 'POINT') : 'NA'}"></div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <input type="radio" name="category" value="NVIDIA" id="nvidia-radio" checked>
+        <label for="nvidia-radio">NVIDIA</label>
+        <input type="radio" name="category" value="AMD" id="amd-radio">
+        <label for="amd-radio">AMD</label>
+    </div>
+
+    <script>
+        // 라디오 버튼 이벤트 처리
+        const radioButtons = document.querySelectorAll('input[name="category"]');
+        radioButtons.forEach(radioButton => {
+            radioButton.addEventListener('change', () => {
+                updateChart();
+            });
+        });
+
+        // 초기 차트 생성
+        updateChart();
+
+        // 차트 업데이트 함수
+        function updateChart() {
+            const selectedCategory = document.querySelector('input[name="category"]:checked').value;
+            const chart = d3.select("#chart");
+            chart.html(""); // 기존 차트 내용 삭제
+
+            const chartData = [[${ videoCardData }]];
+            const maxOps = Math.max(...chartData.map(d => d.ops));
+
+            chartData.forEach(data => {
+                const container = chart.append("div").attr("class", "chart-container");
+
+                container.append("div").attr("class", "name").text(data.name);
+
+                const bar = container.append("div").attr("class", "bar");
+                bar.append("span")
+                    .style("width", `${(data.ops / maxOps) * 100}%`)
+                    .style("background-color", data.color)
+                    .text(data.ops);
+
+                container.append("div").attr("class", "price").text(data.price ? `$${data.price.toFixed(2)}` : 'NA');
+            });
+        }
+    </script>
+</body>
+
+</html>
