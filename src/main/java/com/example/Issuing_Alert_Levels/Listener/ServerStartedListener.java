@@ -1,4 +1,4 @@
-package com.example.Issuing_Alert_Levels;
+package com.example.Issuing_Alert_Levels.Listener;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;

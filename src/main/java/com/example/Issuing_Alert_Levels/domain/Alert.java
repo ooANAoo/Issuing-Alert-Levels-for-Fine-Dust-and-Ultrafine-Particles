@@ -4,17 +4,15 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+//미세먼지 경보 테이블 자동생성
 @Entity
 @Table(name = "ALERT")
 public class Alert {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(name = "alert_level")
     private String alertLevel;
-
     @Column(name = "alert_time")
     private LocalDateTime alertTime;
     @Column(name = "station_name")
@@ -64,8 +62,7 @@ public class Alert {
         this.stationCode = stationCode;
     }
 
-    public Alert(Long id, String alertLevel, LocalDateTime alertTime, String stationName, String stationCode) {
-        this.id = id;
+    public Alert(String alertLevel, LocalDateTime alertTime, String stationName, String stationCode) {
         this.alertLevel = alertLevel;
         this.alertTime = alertTime;
         this.stationName = stationName;

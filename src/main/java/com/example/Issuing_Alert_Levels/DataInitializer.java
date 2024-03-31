@@ -1,10 +1,14 @@
-//package com.example.vga_price_tracker;
+//package com.example.Issuing_Alert_Levels;
 //
-//import com.example.vga_price_tracker.service.AirQualityService;
+//
+//import com.example.Issuing_Alert_Levels.service.AirQualityService;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.CommandLineRunner;
 //import org.springframework.stereotype.Component;
 //
+//
+//
+////서울시 미세먼지 json 데이터를 db에 적재하기 위한 코드
 //@Component
 //public class DataInitializer implements CommandLineRunner {
 //
