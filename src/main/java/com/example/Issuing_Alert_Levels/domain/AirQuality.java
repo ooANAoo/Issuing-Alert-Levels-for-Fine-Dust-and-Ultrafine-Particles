@@ -7,19 +7,23 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
+//주어진 데이터 ,미세 먼지 테이블 자동 생성
 @Entity
-@Table(name = "AIRQUALITY")
+@Table(name = "AIRQUALITY", indexes = {
+        @Index(name = "idx_date_time", columnList = "date_time")
+})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class AirQuality {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "date_time", nullable = false)
     @JsonProperty("날짜")
-    private String dateTime;
+    private LocalDateTime dateTime;
 
     @Column(name = "station_name", nullable = false)
     @JsonProperty("측정소명")
@@ -43,7 +47,7 @@ public class AirQuality {
     @JsonCreator
     public AirQuality(
             @JsonProperty("id") Long id,
-            @JsonProperty("날짜") String dateTime,
+            @JsonProperty("날짜") LocalDateTime dateTime,
             @JsonProperty("측정소명") String stationName,
             @JsonProperty("측정소코드") String stationCode,
             @JsonProperty("PM10") Integer PM10,
@@ -66,11 +70,11 @@ public class AirQuality {
         this.id = id;
     }
 
-    public String getDateTime() {
+    public LocalDateTime getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(String dateTime) {
+    public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
 

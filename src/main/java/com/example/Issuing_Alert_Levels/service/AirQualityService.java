@@ -22,7 +22,7 @@ public class AirQualityService {
     @Autowired
     private AirQualityRepository airQualityRepository;
 
-
+    // JSON 파일 DB에 저장
     public void importDataFromJson() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         ClassPathResource resource = new ClassPathResource("2023년3월_서울시_미세먼지.json");
@@ -31,7 +31,7 @@ public class AirQualityService {
 
         airQualityRepository.saveAll(airQualityList);
     }
-
+    // 모든 미세먼지 데이터 조회
     public List<AirQualityDTO> getAllAirQualityData() {
         List<AirQuality> airQualityList = airQualityRepository.findAll();
 
@@ -43,7 +43,7 @@ public class AirQualityService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
-
+    //미세먼지 데이터 DTO변환
     private AirQualityDTO convertToDTO(AirQuality airQuality) {
         if (airQuality == null) {
             throw new IllegalArgumentException("AirQuality entity cannot be null");

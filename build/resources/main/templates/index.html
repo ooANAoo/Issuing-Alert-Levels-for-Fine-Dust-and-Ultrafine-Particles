@@ -1,0 +1,135 @@
+    <!DOCTYPE html>
+    <html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>미세먼지 알림판</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <style>
+            body {
+                background-color: #f5f5f5;
+            }
+            .container {
+                margin-top: 50px;
+            }
+            #messages {
+                margin-top: 20px;
+                border: 1px solid #ccc;
+                padding: 10px;
+                max-height: 300px;
+                overflow-y: scroll;
+                background-color: #fff;
+            }
+            .alert-message {
+                padding: 10px;
+                margin-bottom: 10px;
+                border-radius: 5px;
+            }
+            .attention {
+                color: #856404;
+                background-color: #fff3cd;
+                border-color: #ffeeba;
+            }
+            .warning {
+                color: #721c24;
+                background-color: #f8d7da;
+                border-color: #f5c6cb;
+            }
+            .serious {
+                color: #1b1e21;
+                background-color: #b8daff;
+                border-color: #7abaff;
+            }
+            .info {
+                color: #31708f;
+                background-color: #d9edf7;
+                border-color: #bce8f1;
+            }
+        </style>
+    </head>
+    <body>
+    <div class="container">
+        <h1>미세먼지 알림판</h1>
+        <div id="messages"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var stompClient = null;
+        var socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function(frame) {
+            console.log(frame);
+            stompClient.subscribe('/all/message', function(result) {
+                show(JSON.parse(result.body));
+            });
+        });
+
+        function getAlertType(alertLevel) {
+            switch (alertLevel) {
+                case "1":
+                    return "초미세먼지 경보";
+                case "2":
+                    return "미세먼지 경보";
+                case "3":
+                    return "초미세먼지 주의보";
+                case "4":
+                    return "미세먼지 주의보";
+                default:
+                    return "";
+            }
+        }
+
+        function getDescription(levelCode) {
+            switch (levelCode) {
+                case "1":
+                    return "가장 심각한 상태, 건강에 매우 해로움";
+                case "2":
+                    return "건강에 매우 해로울 수 있음";
+                case "3":
+                    return "건강에 해로울 수 있음";
+                case "4":
+                    return "건강에 약간 해로울 수 있음";
+                default:
+                    return "";
+            }
+        }
+
+        function show(message) {
+            var response = document.getElementById('messages');
+
+
+            var messages = message.text.split(', ');
+            messages.forEach(function(item) {
+                if (item) {
+                    var parts = item.split(' : ');
+                    var area = parts[0];
+                    var levelCode = parts[1];
+                    var level = getAlertType(levelCode);
+                    var description = getDescription(levelCode);
+
+                    var p = document.createElement('div');
+                    p.classList.add('alert-message');
+                    switch (levelCode) {
+                        case "1":
+                            p.classList.add('serious');
+                            break;
+                        case "2":
+                            p.classList.add('warning');
+                            break;
+                        case "3":
+                            p.classList.add('attention');
+                            break;
+                        case "4":
+                            p.classList.add('info');
+                            break;
+                    }
+                    p.textContent = `${area} : ${level} - ${description}`;
+                    response.appendChild(p);
+                }
+            });
+        }
+        /*]]>*/
+    </script>
+    </body>
+    </html>

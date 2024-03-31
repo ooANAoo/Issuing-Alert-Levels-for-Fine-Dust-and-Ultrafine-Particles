@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        #messages {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            max-height: 300px;
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WebSocket 연결 상태: <span id="socketStatus">연결되지 않음</span></h1>
+        <div>
+            <input type="text" id="text" class="form-control" placeholder="메시지를 입력하세요">
+            <button onclick="sendMessage()" class="btn btn-primary">메시지 보내기</button>
+        </div>
+        <div>
+            <input type="text" id="privateText" class="form-control" placeholder="개인 메시지를 입력하세요">
+            <button onclick="sendPrivateMessage()" class="btn btn-secondary">개인 메시지 보내기</button>
+        </div>
+        <div id="messages"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+    <script>
+       var stompClient = null;
+       var socket = new SockJS('/ws');
+       stompClient = Stomp.over(socket);
+       stompClient.connect({}, function(frame) {
+            console.log(frame);
+            stompClient.subscribe('/all/message', function(result) {
+                show(JSON.parse(result.body));
+            });
+            stompClient.subscribe('/user/specific', function(result) {
+                show(JSON.parse(result.body));
+            });
+       });
+
+       function sendMessage() {
+            var text = document.getElementById('text').value;
+            stompClient.send("/app/application", {}, JSON.stringify({'text': text}));
+            document.getElementById('text').value = '';  // Clear input field after send
+       }
+
+       function sendPrivateMessage() {
+            var text = document.getElementById('privateText').value;
+            stompClient.send("/app/private", {}, JSON.stringify({'text': text}));
+            document.getElementById('privateText').value = '';  // Clear input field after send
+       }
+
+       function show(message) {
+            var response = document.getElementById('messages');
+            var p = document.createElement('p');
+            p.innerHTML = "message: " + message.text;
+            response.appendChild(p);
+       }
+    </script>
+</body>
+</html>

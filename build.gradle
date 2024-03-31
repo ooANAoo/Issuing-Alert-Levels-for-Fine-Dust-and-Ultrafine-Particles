@@ -32,9 +32,11 @@ dependencies {
     implementation 'mysql:mysql-connector-java:8.0.32'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310' // 사용 중인 Jackson 버전에 맞게 조정해주세요
     implementation 'com.fasterxml.jackson.core:jackson-databind'
-
-
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
     runtimeOnly 'com.h2database:h2'
+    implementation group: 'org.json', name: 'json', version: '20090211'
+
+
 }
 
 tasks.named('test') {

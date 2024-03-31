@@ -4,28 +4,22 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-//미세먼지 테이블에 데이터를 저장하기위한 D
+// 각 구별로 미세먼지 2시간 이내 평균 값을 계산하고 저장하기위한 DTO
 @Getter
-public class AirQualityDTO {
+public class AirQualityAVGDTO {
 
-    private long id;
     private LocalDateTime dateTime;
     private String stationName;
     private String stationCode;
-    private Integer PM10;
-    private Integer PM25;
+    private Double PM25AVG;
+    private Double PM10AVG;
 
-    // Getters and Setters
-
-    public AirQualityDTO(long id,LocalDateTime dateTime, String stationName, String stationCode, Integer PM10, Integer PM25) {
-        this.id = id;
+    public AirQualityAVGDTO(LocalDateTime dateTime, String stationName, String stationCode, Double PM25AVG, Double PM10AVG) {
         this.dateTime = dateTime;
         this.stationName = stationName;
         this.stationCode = stationCode;
-        this.PM10 = PM10;
-        this.PM25 = PM25;
-    }
-    public AirQualityDTO(){
+        this.PM25AVG = PM25AVG;
+        this.PM10AVG = PM10AVG;
     }
 
     public void setDateTime(LocalDateTime dateTime) {
@@ -40,11 +34,11 @@ public class AirQualityDTO {
         this.stationCode = stationCode;
     }
 
-    public void setPM10(Integer PM10) {
-        this.PM10 = PM10;
+    public void setPM25AVG(Double PM25AVG) {
+        this.PM25AVG = PM25AVG;
     }
 
-    public void setPM25(Integer PM25) {
-        this.PM25 = PM25;
+    public void setPM10AVG(Double PM10AVG) {
+        this.PM10AVG = PM10AVG;
     }
 }
