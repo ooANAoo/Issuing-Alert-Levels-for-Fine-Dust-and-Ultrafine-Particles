@@ -1,6 +1,11 @@
 package com.example.Issuing_Alert_Levels.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 //클라이언트에게 알림을 보내기위한 문자 객체
+@Getter
+@Setter
 public class MessageDTO {
     private String text;
 
@@ -12,11 +17,4 @@ public class MessageDTO {
         this.text = text;
     }
 
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
 }
