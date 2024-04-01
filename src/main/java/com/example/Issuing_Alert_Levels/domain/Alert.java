@@ -1,12 +1,16 @@
 package com.example.Issuing_Alert_Levels.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 //미세먼지 경보 테이블 자동생성
 @Entity
 @Table(name = "ALERT")
+@Getter
+@Setter
 public class Alert {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,57 +19,17 @@ public class Alert {
     private String alertLevel;
     @Column(name = "alert_time")
     private LocalDateTime alertTime;
-    @Column(name = "station_name")
-    private String stationName;
-    @Column(name = "station_code")
-    private String stationCode;
-
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "station_code", nullable = false)
+    private Station station;
     // Getters and Setters...
 
-    public Long getId() {
-        return id;
+    // 기본 생성자 추가
+    public Alert() {
     }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getAlertLevel() {
-        return alertLevel;
-    }
-
-    public void setAlertLevel(String alertLevel) {
-        this.alertLevel = alertLevel;
-    }
-
-    public LocalDateTime getAlertTime() {
-        return alertTime;
-    }
-
-    public void setAlertTime(LocalDateTime alertTime) {
-        this.alertTime = alertTime;
-    }
-
-    public String getStationName() {
-        return stationName;
-    }
-
-    public void setStationName(String stationName) {
-        this.stationName = stationName;
-    }
-
-    public String getStationCode() {
-        return stationCode;
-    }
-
-    public void setStationCode(String stationCode) {
-        this.stationCode = stationCode;
-    }
-
-    public Alert(String alertLevel, LocalDateTime alertTime, String stationName, String stationCode) {
+    public Alert(String alertLevel, LocalDateTime alertTime, Station station) {
         this.alertLevel = alertLevel;
         this.alertTime = alertTime;
-        this.stationName = stationName;
-        this.stationCode = stationCode;
+        this.station = station;
     }
 }
