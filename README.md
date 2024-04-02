@@ -19,6 +19,7 @@ Version
 2. Issuing_Alert_Levels 실행
 3. 웹 페이지를 열고, http://localhost:8080/ 접속(db에 2024년도 데이터는 없어서 출력값X .)
 4. 샘플 테스팅으로 체점 하는것 추천
+5. application.yml파일 작성
 
 
 
