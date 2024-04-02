@@ -8,7 +8,12 @@ import java.time.LocalDateTime;
 
 //미세먼지 경보 테이블 자동생성
 @Entity
-@Table(name = "ALERT")
+@Table(
+        name = "ALERT",
+        indexes = {
+                @Index(name = "idx_station_code_and_alert_time", columnList = "station_code, alert_time")
+        }
+)
 @Getter
 @Setter
 public class Alert {
